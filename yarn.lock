@@ -1451,6 +1451,13 @@ execa@^2.0.3, execa@^2.0.4:
     signal-exit "^3.0.2"
     strip-final-newline "^2.0.0"
 
+express-formidable@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.nlark.com/express-formidable/download/express-formidable-1.2.0.tgz#6b05bc05da9e4cd712cac166fcb41ef7172b760c"
+  integrity sha1-awW8BdqeTNcSysFm/LQe9xcrdgw=
+  dependencies:
+    formidable "^1.0.17"
+
 express-session@^1.17.2:
   version "1.17.2"
   resolved "https://registry.nlark.com/express-session/download/express-session-1.17.2.tgz#397020374f9bf7997f891b85ea338767b30d0efd"
@@ -1690,6 +1697,11 @@ fn.name@1.x.x:
   version "1.1.0"
   resolved "https://registry.nlark.com/fn.name/download/fn.name-1.1.0.tgz#26cad8017967aea8731bc42961d04a3d5988accc"
   integrity sha1-JsrYAXlnrqhzG8QpYdBKPVmIrMw=
+
+formidable@^1.0.17:
+  version "1.2.6"
+  resolved "https://registry.npmmirror.com/formidable/download/formidable-1.2.6.tgz#d2a51d60162bbc9b4a055d8457a7c75315d1a168"
+  integrity sha1-0qUdYBYrvJtKBV2EV6fHUxXRoWg=
 
 forwarded@0.2.0:
   version "0.2.0"

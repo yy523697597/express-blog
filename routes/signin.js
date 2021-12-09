@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const checkNotLogin = require('../midllewares/check').checkNotLogin
+const checkNotLogin = require('../middlewares/check').checkNotLogin
 
 router.get('/', checkNotLogin, (req, res, next) => {
   res.send('login page')

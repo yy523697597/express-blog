@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const checkLogin = require('../midllewares/check').checkLogin
+const checkLogin = require('../middlewares/check').checkLogin
 
 router.post('/', checkLogin, (req, res, next) => {
   res.send('create comment')

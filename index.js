@@ -8,6 +8,7 @@ const routes = require('./routes')
 const pkg = require('./package')
 const session = require('express-session')
 const MongoDbStore = require('connect-mongo')
+const formidableMiddleware = require('express-formidable')
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
@@ -29,6 +30,12 @@ app.use(
   })
 )
 app.use(flash())
+app.use(
+  formidableMiddleware({
+    uploadDir: path.join(__dirname, 'public/img'),
+    keepExtensions: true
+  })
+)
 
 app.locals.blog = {
   title: pkg.name,

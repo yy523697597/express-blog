@@ -1,15 +1,79 @@
 const express = require('express')
 const router = express.Router()
-const checkNotLogin = require('../midllewares/check').checkNotLogin
+const checkNotLogin = require('../middlewares/check').checkNotLogin
+const fs = require('fs')
+const sha1 = require('sha1')
+const path = require('path')
 
-router.get('/', checkNotLogin, (req, res, next) => {
-  res.render('signup page')
+const UserModel = require('../models/users')
+
+router.get('/', checkNotLogin, function (req, res, next) {
+  return res.render('signup')
 })
 
-router.post('/', checkNotLogin, (req, res, next) => {
-  res.render('user signup')
+router.post('/', (req, res, next) => {
+  const { name, gender, bio, password, rePassword } = req.fields
+
+  console.log(' password, rePassword ---->', password, rePassword)
+  const avatarPath = req.files.avatar.path
+  const userAvatar = avatarPath.split(path.sep).pop()
+  try {
+    if (!(name.length > 1 && name.length <= 10)) {
+      throw new Error('名字长度请限制在 1-10 个字符')
+    }
+
+    if (!['m', 'f', 'x'].includes(gender)) {
+      throw new Error('性别只能是 m、f 或 x')
+    }
+    if (!(bio.length > 1 && bio.length < 30)) {
+      throw new Error('个人简介请限制在 1-30 个字符')
+    }
+
+    if (!req.files.avatar.name) {
+      throw new Error('请上传头像')
+    }
+
+    if (password.length < 6) {
+      throw new Error('密码长度不能小于6')
+    }
+    if (password !== rePassword) {
+      throw new Error('两次输入的密码不一致')
+    }
+  } catch (error) {
+    // 注册失败，异步删除上传的头像
+    fs.unlinkSync(req.files.avatar.path)
+    req.flash('error', error.message)
+    return res.redirect('/signup')
+  }
+
+  const userPassword = sha1(password)
+
+  const user = {
+    name,
+    password: userPassword,
+    gender,
+    bio,
+    avatar: userAvatar
+  }
+
+  UserModel.create(user)
+    .then(result => {
+      const user = result.ops[0]
+      delete user.password
+      req.session.user = user
+      req.flash('success', '注册成功')
+      res.redirect('/posts')
+    })
+    .catch(error => {
+      fs.unlink(avatarPath, err => {
+        req.flash('error', '注册失败')
+        if (error.message.match('duplicate key')) {
+          req.flash('error', '用户名被占用')
+          return res.redirect('/signup')
+        }
+        next(error)
+      })
+    })
 })
 
 module.exports = router
-
-
