@@ -1,8 +1,9 @@
-const express = require('express')
+import { checkNotLogin } from '@middlewares/check'
+import { getUserByName } from '@models/users'
+import express from 'express'
+import sha1 from 'sha1'
+
 const router = express.Router()
-const checkNotLogin = require('../middlewares/check').checkNotLogin
-const UserModel = require('../models/users')
-const sha1 = require('sha1')
 
 router.get('/', checkNotLogin, (req, res, next) => {
   res.render('signin')
@@ -22,11 +23,11 @@ router.post('/', checkNotLogin, (req, res, next) => {
       throw new Error('密码错误')
     }
   } catch (error) {
-    req.flash('error', error.message)
+    req.flash('error', (error as Error).message)
     return res.redirect('back')
   }
 
-  UserModel.getUserByName(name).then(user => {
+  getUserByName(name).then((user) => {
     console.log('user ---->', user)
     if (!user) {
       req.flash('error', '用户不存在')
@@ -39,8 +40,8 @@ router.post('/', checkNotLogin, (req, res, next) => {
     req.flash('success', '登录成功')
     delete user.password
     req.session.user = user
-    res.redirect('/post')
+    res.redirect('/posts')
   })
 })
 
-module.exports = router
+export default router

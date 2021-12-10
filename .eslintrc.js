@@ -1,12 +1,22 @@
 module.exports = {
+  extends: ['alloy', 'alloy/typescript'],
+  plugins: ['simple-import-sort'],
   env: {
-    browser: true,
-    commonjs: true,
-    es2021: true
+    // Your environments (which contains several predefined global variables)
+    //
+    // browser: true,
+    // node: true,
+    // mocha: true,
+    // jest: true,
+    // jquery: true
   },
-  extends: 'standard',
-  parserOptions: {
-    ecmaVersion: 12
+  globals: {
+    // Your global variables (setting to false means it's not allowed to be reassigned)
+    //
+    // myGlobal: false
   },
-  rules: {}
+  rules: {
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
+  },
 }

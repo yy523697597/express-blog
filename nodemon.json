@@ -1,16 +1,7 @@
 {
-  "watch": [
-    "index.js",
-    "views/",
-    "routes/",
-    "models/",
-    "public/",
-    "lib/",
-    "middlewares/",
-    ".env"
-  ],
+  "watch": ["index.js", "views/", "routes/", "models/", "public/", "lib/", "middlewares/", ".env"],
   "delay": 1000,
   "ignore": ["node_modules"],
   "ext": "js ts ejs yml json",
-  "exec": "node ./index.js"
+  "exec": "ts-node -r tsconfig-paths/register index.ts"
 }

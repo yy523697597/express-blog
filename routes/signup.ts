@@ -1,13 +1,13 @@
-const express = require('express')
+import { checkNotLogin } from '@middlewares/check'
+import { create } from '@models/users'
+import express from 'express'
+import fs from 'fs'
+import path from 'path'
+import sha1 from 'sha1'
+
 const router = express.Router()
-const checkNotLogin = require('../middlewares/check').checkNotLogin
-const fs = require('fs')
-const sha1 = require('sha1')
-const path = require('path')
 
-const UserModel = require('../models/users')
-
-router.get('/', checkNotLogin, function (req, res, next) {
+router.get('/', checkNotLogin, (req, res, next) => {
   return res.render('signup')
 })
 
@@ -42,7 +42,7 @@ router.post('/', (req, res, next) => {
   } catch (error) {
     // 注册失败，异步删除上传的头像
     fs.unlinkSync(req.files.avatar.path)
-    req.flash('error', error.message)
+    req.flash('error', (error as Error).message)
     return res.redirect('/signup')
   }
 
@@ -53,19 +53,19 @@ router.post('/', (req, res, next) => {
     password: userPassword,
     gender,
     bio,
-    avatar: userAvatar
+    avatar: userAvatar,
   }
 
-  UserModel.create(user)
-    .then(result => {
+  create(user)
+    .then((result) => {
       const user = result.ops[0]
       delete user.password
       req.session.user = user
       req.flash('success', '注册成功')
       res.redirect('/posts')
     })
-    .catch(error => {
-      fs.unlink(avatarPath, err => {
+    .catch((error) => {
+      fs.unlink(avatarPath, (err) => {
         req.flash('error', '注册失败')
         if (error.message.match('duplicate key')) {
           req.flash('error', '用户名被占用')
@@ -76,4 +76,4 @@ router.post('/', (req, res, next) => {
     })
 })
 
-module.exports = router
+export default router

@@ -1,7 +1,6 @@
-const express = require('express')
+import { checkLogin } from '@middlewares/check'
+import express from 'express'
 const router = express.Router()
-
-const checkLogin = require('../middlewares/check').checkLogin
 
 router.get('/', (req, res, next) => {
   res.render('posts')
@@ -27,4 +26,4 @@ router.get('/:postId/remove', checkLogin, (req, res, next) => {
   res.send('remove post')
 })
 
-module.exports = router
+export default router

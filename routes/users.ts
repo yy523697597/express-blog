@@ -1,8 +1,8 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
 
 router.get('/:name', (req, res) => {
   res.render('users', { name: req.params.name })
 })
 
-module.exports = router
+export default router

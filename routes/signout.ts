@@ -1,6 +1,7 @@
-const express = require('express')
+import { checkLogin } from '@middlewares/check'
+import express from 'express'
+
 const router = express.Router()
-const checkLogin = require('../middlewares/check').checkLogin
 
 router.get('/', checkLogin, (req, res, next) => {
   req.session.user = null
@@ -8,4 +9,4 @@ router.get('/', checkLogin, (req, res, next) => {
   res.redirect('/posts')
 })
 
-module.exports = router
+export default router

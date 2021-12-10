@@ -1,14 +1,17 @@
-require('dotenv').config()
+import flash from 'connect-flash'
+import MongoDbStore from 'connect-mongo'
+import dotenv from 'dotenv'
+import express from 'express'
+import formidableMiddleware from 'express-formidable'
+import session from 'express-session'
+import path from 'path'
 
-const express = require('express')
+import pkg from './package.json'
+import routes from './routes'
+
+dotenv.config()
+
 const app = express()
-const path = require('path')
-const flash = require('connect-flash')
-const routes = require('./routes')
-const pkg = require('./package')
-const session = require('express-session')
-const MongoDbStore = require('connect-mongo')
-const formidableMiddleware = require('express-formidable')
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
@@ -21,25 +24,24 @@ app.use(
     resave: true,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24
+      maxAge: 1000 * 60 * 60 * 24,
     },
     store: MongoDbStore.create({
       mongoUrl: process.env.MONGO_DB,
-      useUnifiedTopology: true
-    })
-  })
+    }),
+  }),
 )
 app.use(flash())
 app.use(
   formidableMiddleware({
     uploadDir: path.join(__dirname, 'public/img'),
-    keepExtensions: true
-  })
+    keepExtensions: true,
+  }),
 )
 
 app.locals.blog = {
   title: pkg.name,
-  description: pkg.description
+  description: pkg.description,
 }
 app.use((req, res, next) => {
   res.locals.user = req.session.user

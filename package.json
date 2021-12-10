@@ -2,7 +2,7 @@
   "name": "ethan-node-blog",
   "version": "1.0.0",
   "description": "Ethan's blog powered by express",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "start": "nodemon --config nodemon.json",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,15 +12,19 @@
   "author": "Ethan Yu",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^16.11.12",
+    "@typescript-eslint/eslint-plugin": "^5.6.0",
+    "@typescript-eslint/parser": "^5.6.0",
     "config-lite": "^3.0.0",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^4.6.0",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
-    "eslint-config-standard": "^16.0.3",
+    "eslint-config-alloy": "^4.4.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "express-session": "^1.17.2",
@@ -33,9 +37,11 @@
     "prettier": "^2.5.1",
     "prettier-standard": "^16.4.1",
     "sha1": "^1.1.1",
+    "typescript": "^4.5.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "eslint": "^8.4.1"
+    "eslint": "^8.4.1",
+    "tsconfig-paths": "^3.12.0"
   }
 }
