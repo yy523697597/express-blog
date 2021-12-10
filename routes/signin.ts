@@ -28,7 +28,6 @@ router.post('/', checkNotLogin, (req, res, next) => {
   }
 
   getUserByName(name).then((user) => {
-    console.log('user ---->', user)
     if (!user) {
       req.flash('error', '用户不存在')
       return res.redirect('back')

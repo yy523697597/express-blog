@@ -3,23 +3,24 @@ import Mongolass from 'mongolass'
 import objectIdToTimeStamp from 'objectid-to-timestamp'
 
 const mongolass = new Mongolass()
+mongolass.connect('mongodb://localhost:27017/node-blog-mongo')
 
 mongolass.plugin('addCreatedAt', {
   afterFind: (results) => {
     results.forEach((result) => {
-      result.created_at = moment(objectIdToTimeStamp(result.id)).format('YYYY-MM-DD HH:mm')
+      const timeStamp = objectIdToTimeStamp(result._id)
+      result.created_at = moment(timeStamp).format('YYYY-MM-DD HH:mm')
     })
     return results
   },
   afterFindOne: (result) => {
     if (result) {
-      result.created_at = moment(objectIdToTimeStamp(result._id)).format('YYYY-MM-DD HH:mm')
+      const timeStamp = objectIdToTimeStamp(result._id)
+      result.created_at = moment(timeStamp).format('YYYY-MM-DD HH:mm')
     }
     return result
   },
 })
-
-mongolass.connect(process.env.MONGO_DB)
 
 export const User = mongolass.model('User', {
   name: {
