@@ -68,3 +68,20 @@ export const Post = mongolass.model('Post', {
 })
 
 Post.index({ author: 1, _id: -1 }).exec()
+
+export const Comment = mongolass.model('Comment', {
+  author: {
+    type: Mongolass.Types.ObjectId,
+    required: true,
+  },
+  content: {
+    type: 'string',
+    required: true,
+  },
+  postId: {
+    type: Mongolass.Types.ObjectId,
+    required: true,
+  },
+})
+
+Comment.index({ postId: 1, _id: 1 }).exec()

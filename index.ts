@@ -4,7 +4,9 @@ import dotenv from 'dotenv'
 import express from 'express'
 import formidableMiddleware from 'express-formidable'
 import session from 'express-session'
+import expressWinston from 'express-winston'
 import path from 'path'
+import winston from 'winston'
 
 import pkg from './package.json'
 import routes from './routes'
@@ -50,7 +52,33 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use(
+  expressWinston.logger({
+    transports: [
+      new winston.transports.Console(),
+      new winston.transports.File({
+        filename: 'logs/success.logs',
+      }),
+    ],
+  }),
+)
 routes(app)
+app.use(
+  expressWinston.errorLogger({
+    transports: [
+      new winston.transports.Console(),
+      new winston.transports.File({
+        filename: 'logs/error.log',
+      }),
+    ],
+  }),
+)
+
+// eslint-disable-next-line max-params
+app.use((err, req, res, next) => {
+  req.flash('error', err.message)
+  res.redirect('/posts')
+})
 
 app.listen(process.env.PORT, () => {
   console.log(`${pkg.name} listening on port ${process.env.PORT}`)

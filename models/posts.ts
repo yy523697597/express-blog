@@ -1,6 +1,8 @@
 import { Post } from '@lib/mongo'
 import { marked } from 'marked'
 
+import { delCommentsByPostId, getCommentsCount } from './comment'
+
 Post.plugin('contentToHTML', {
   afterFind: (posts) => {
     return posts.map((post) => {
@@ -16,12 +18,39 @@ Post.plugin('contentToHTML', {
   },
 })
 
+Post.plugin('addCommentsCount', {
+  afterFind: (posts) => {
+    return Promise.all(
+      posts.map((post) => {
+        return getCommentsCount(post._id).then((commentsCount) => {
+          post.commentsCount = commentsCount
+          return post
+        })
+      }),
+    )
+  },
+  afterFindOne: (post) => {
+    if (post) {
+      return getCommentsCount(post._id).then((commentsCount) => {
+        post.commentsCount = commentsCount
+        return post
+      })
+    }
+    return post
+  },
+})
+
 export const createPost = (post) => {
   return Post.create(post).exec()
 }
 
 export const getPostById = (postId) => {
-  return Post.findOne({ _id: postId }).populate({ path: 'author', model: 'User' }).addCreatedAt().contentToHTML().exec()
+  return Post.findOne({ _id: postId })
+    .populate({ path: 'author', model: 'User' })
+    .addCreatedAt()
+    .addCommentsCount()
+    .contentToHTML()
+    .exec()
 }
 
 export const getPosts = (author) => {
@@ -34,6 +63,7 @@ export const getPosts = (author) => {
     .populate({ path: 'author', model: 'User' })
     .sort({ _id: -1 })
     .addCreatedAt()
+    .addCommentsCount()
     .contentToHTML()
     .exec()
 }
@@ -51,5 +81,11 @@ export const updatePostById = (postId, data) => {
 }
 
 export const deletePostById = (postId) => {
-  return Post.deleteOne({ _id: postId }).exec()
+  return Post.deleteOne({ _id: postId })
+    .exec()
+    .then((res) => {
+      if (res.result.ok && res.result.n > 0) {
+        return delCommentsByPostId(postId)
+      }
+    })
 }

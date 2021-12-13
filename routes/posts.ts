@@ -1,4 +1,5 @@
 import { checkLogin } from '@middlewares/check'
+import { getComments } from '@models/comment'
 import {
   createPost,
   deletePostById,
@@ -58,14 +59,17 @@ router.get('/create', checkLogin, (req, res, next) => {
 
 router.get('/:postId', (req, res, next) => {
   const postId = req.params.postId
-  Promise.all([getPostById(postId), increasePv(postId)])
+  Promise.all([getPostById(postId), getComments(postId), increasePv(postId)])
     .then((result) => {
       const post = result[0]
+      const comments = result[1]
+
       if (!post) {
         throw new Error('文章不存在')
       }
       res.render('postDetail', {
         post,
+        comments,
       })
     })
     .catch(next)

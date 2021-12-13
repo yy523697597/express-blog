@@ -6,7 +6,7 @@ import signup from './signup'
 
 export default function (app) {
   app.get('/', (req, res) => {
-    return res.redirect('/signup')
+    return res.redirect('/posts')
   })
 
   app.use('/signin', signin)
